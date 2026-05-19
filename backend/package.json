@@ -1,0 +1,28 @@
+{
+  "name": "levi-industrial-os-backend",
+  "version": "1.0.0",
+  "description": "Industrial SaaS API",
+  "main": "src/app.js",
+  "scripts": {
+    "dev": "nodemon src/app.js",
+    "start": "node src/app.js"
+  },
+  "keywords": [
+    "industry",
+    "manufacturing",
+    "mes",
+    "scada",
+    "industrial"
+  ],
+  "author": "Arthur Levi",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
