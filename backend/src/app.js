@@ -1,3 +1,4 @@
+
 const express = require("express");
 const cors = require("cors");
 
@@ -145,6 +146,14 @@ const machines = [
 
 /*
 ==================================================
+TELEMETRIA INDUSTRIAL
+==================================================
+*/
+
+let telemetryData = [];
+
+/*
+==================================================
 ROTAS PRINCIPAIS
 ==================================================
 */
@@ -283,6 +292,80 @@ app.get("/api/stop-reasons", (req, res) => {
 
 /*
 ==================================================
+TELEMETRIA EM TEMPO REAL
+==================================================
+*/
+
+// RECEBER DADOS DA MÁQUINA
+
+app.post("/api/telemetry", (req, res) => {
+  const data = req.body;
+
+  telemetryData.push(data);
+
+  // Mantém apenas os últimos 100 registros
+  if (telemetryData.length > 100) {
+    telemetryData.shift();
+  }
+
+  console.log("Nova telemetria recebida:");
+  console.log(data);
+
+  res.json({
+    success: true,
+    message: "Telemetria recebida com sucesso"
+  });
+});
+
+// LISTAR TELEMETRIA
+
+app.get("/api/telemetry", (req, res) => {
+  res.json(telemetryData);
+});
+
+// ÚLTIMO REGISTRO
+
+app.get("/api/telemetry/latest", (req, res) => {
+  const latest =
+    telemetryData[telemetryData.length - 1];
+
+  if (!latest) {
+    return res.status(404).json({
+      error: "Nenhuma telemetria encontrada"
+    });
+  }
+
+  res.json(latest);
+});
+
+/*
+==================================================
+SIMULAÇÃO DE OEE
+==================================================
+*/
+
+app.get("/api/oee", (req, res) => {
+  const availability = 92;
+  const performance = 87;
+  const quality = 96;
+
+  const oee =
+    (
+      (availability / 100) *
+      (performance / 100) *
+      (quality / 100)
+    ) * 100;
+
+  res.json({
+    availability,
+    performance,
+    quality,
+    oee: oee.toFixed(2)
+  });
+});
+
+/*
+==================================================
 SERVIDOR
 ==================================================
 */
@@ -292,3 +375,4 @@ const PORT = 5000;
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });
+
